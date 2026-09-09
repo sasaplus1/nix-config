@@ -5,10 +5,8 @@
 
   console.keyMap = "jp106";
 
-  services.xserver.xkb = {
-    layout = "jp";
-    model = "apple";
-  };
+  # model はキーボードの実体ごとに異なるため各ホストで指定する
+  services.xserver.xkb.layout = "jp";
 
   i18n.inputMethod = {
     enable = true;

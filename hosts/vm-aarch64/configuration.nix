@@ -2,16 +2,20 @@
 
 {
   imports = [
-    ./hardware-configuration.nix
-
-    ../../modules/nix-settings.nix
-    ../../modules/users.nix
-    ../../modules/plasma.nix
-    ../../modules/japanese.nix
-    ../../modules/packages-cui.nix
-    ../../modules/packages-gui.nix
+    ../../modules/common.nix
     ../../modules/vm-guest.nix
   ];
+
+  # インストール時に mkfs で付けるラベルと対応させる
+  fileSystems."/" = {
+    device = "/dev/disk/by-label/nixos";
+    fsType = "ext4";
+  };
+
+  fileSystems."/boot" = {
+    device = "/dev/disk/by-label/ESP";
+    fsType = "vfat";
+  };
 
   # UTM の aarch64 VM は UEFI ブートになる
   boot.loader.systemd-boot.enable = true;

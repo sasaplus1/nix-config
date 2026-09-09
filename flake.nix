@@ -31,6 +31,11 @@
         ];
       };
 
+    # flake.lock で固定した disko を使う
+    # nix run github:nix-community/disko/latest は可変ブランチなので使わない
+    packages.aarch64-linux.disko =
+      self.nixosConfigurations.vm-aarch64.config.system.build.destroyFormatMount;
+
     packages.x86_64-linux.iso =
       self.nixosConfigurations.macbook-pro-11-1-iso.config.system.build.isoImage;
   };

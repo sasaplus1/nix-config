@@ -6,6 +6,15 @@
   };
 
   outputs = { self, nixpkgs, ... }: {
+    nixosConfigurations.vm-aarch64 =
+      nixpkgs.lib.nixosSystem {
+        system = "aarch64-linux";
+
+        modules = [
+          ./hosts/vm-aarch64/configuration.nix
+        ];
+      };
+
     nixosConfigurations.macbook-pro-11-1-iso =
       nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";

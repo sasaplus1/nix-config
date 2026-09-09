@@ -3,14 +3,21 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
+
+    disko = {
+      url = "github:nix-community/disko/latest";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, ... }: {
+  outputs = { self, nixpkgs, disko, ... }: {
     nixosConfigurations.vm-aarch64 =
       nixpkgs.lib.nixosSystem {
         system = "aarch64-linux";
 
         modules = [
+          disko.nixosModules.disko
+
           ./hosts/vm-aarch64/configuration.nix
         ];
       };

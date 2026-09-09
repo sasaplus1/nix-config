@@ -1,6 +1,11 @@
 { ... }:
 
 {
+  # hashedPasswordFile を activation ごとに読み直させる
+  # true だとアカウント作成時にしか読まれず、置き忘れると復旧できない
+  # root は宣言しないため ! になる。sudo で代用する
+  users.mutableUsers = false;
+
   users.users.sasaplus1 = {
     isNormalUser = true;
 

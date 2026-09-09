@@ -1,6 +1,6 @@
 .DEFAULT_GOAL := all
 
-SHELL := /bin/bash
+SHELL := $(shell command -v bash)
 
 makefile := $(abspath $(lastword $(MAKEFILE_LIST)))
 makefile_dir := $(dir $(makefile))

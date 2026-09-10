@@ -4,6 +4,9 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
 
+    # 一部のパッケージだけ unstable から取る
+    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
+
     disko = {
       url = "github:nix-community/disko/latest";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -27,7 +30,6 @@
       nixpkgs.lib.nixosSystem {
         system = "aarch64-linux";
 
-        # modules/home-manager.nix から inputs を参照する
         specialArgs = { inherit inputs; };
 
         modules = [

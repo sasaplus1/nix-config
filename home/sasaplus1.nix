@@ -1,27 +1,28 @@
 { ... }:
 
 {
+  imports = [
+    ./packages.nix
+  ];
+
   home.stateVersion = "26.05";
 
-  # ロケールに合わせて日本語のディレクトリ名が作られるのを止める
-  # 既定値が Desktop, Documents, Downloads などの英語名になっている
+  # ja_JP.UTF-8 だと日本語名のディレクトリが作られる
   xdg.userDirs = {
     enable = true;
     createDirectories = true;
 
-    # XDG_PROJECTS_DIR は標準ではないので作らない
+    # XDG_PROJECTS_DIR は標準ではない
     projects = null;
   };
 
   programs.plasma = {
-    # overrideConfig は既定の false のままにする
-    # true にすると宣言していない設定が activation ごとに消える
     enable = true;
 
     workspace.lookAndFeel = "org.kde.breezedark.desktop";
 
-    # UTM はトラックパッドをタッチパッドではなく汎用USBデバイスとして見せる
-    # ID はどちらも QEMU の 0627:0001 で、名前だけが異なる
+    # UTM はトラックパッドを汎用USBデバイスとして見せる
+    # ID はどちらも 0627:0001 で名前だけが異なる
     input.mice = [
       {
         name = "QEMU QEMU USB Tablet";

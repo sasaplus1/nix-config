@@ -8,12 +8,27 @@
       url = "github:nix-community/disko/latest";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    home-manager = {
+      url = "github:nix-community/home-manager/release-26.05";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    # plasma-manager にリリースブランチはないので trunk を使う
+    plasma-manager = {
+      url = "github:nix-community/plasma-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
+    };
   };
 
-  outputs = { self, nixpkgs, disko, ... }: {
+  outputs = inputs@{ self, nixpkgs, disko, ... }: {
     nixosConfigurations.vm-aarch64 =
       nixpkgs.lib.nixosSystem {
         system = "aarch64-linux";
+
+        # modules/home-manager.nix から inputs を参照する
+        specialArgs = { inherit inputs; };
 
         modules = [
           disko.nixosModules.disko

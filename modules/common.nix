@@ -5,6 +5,7 @@
     ./nix-settings.nix
     ./users.nix
     ./home-manager.nix
+    ./openssh.nix
     ./plasma.nix
     ./japanese.nix
     ./fonts.nix

@@ -21,6 +21,14 @@ let
   version = "0.4.0";
 
   assets = {
+    aarch64-darwin = {
+      suffix = "darwin_arm64";
+      hash = "sha256-tSq6R9nHd+HusgXtS0PSguvgcqdvM+vR5cZpAYffOvc=";
+    };
+    x86_64-darwin = {
+      suffix = "darwin_amd64";
+      hash = "sha256-RHB+pC7vvMv02CYJ/RuYKdi/lYMqMQpPX4Tn/uGs/Ck=";
+    };
     x86_64-linux = {
       suffix = "linux_amd64";
       hash = "sha256-Lbzc0NQJZv2hNSKyPGUiuMZoLw5xkwExln4PXXDxJSY=";

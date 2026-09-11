@@ -4,7 +4,8 @@
   imports = [
     ./hardware-configuration.nix
 
-    ../../modules/common.nix
+    ../../modules/core
+    ../../modules/desktop
   ];
 
   # 内蔵キーボードは Apple の JIS 配列

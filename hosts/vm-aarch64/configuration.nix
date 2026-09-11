@@ -4,8 +4,9 @@
   imports = [
     ./disk-config.nix
 
-    ../../modules/common.nix
-    ../../modules/vm-guest.nix
+    ../../modules/core
+    ../../modules/desktop
+    ../../modules/hardware/vm-guest.nix
   ];
 
   # UTM の aarch64 VM は UEFI ブートになる

@@ -15,13 +15,9 @@
 
     extraSpecialArgs = { inherit pkgs-unstable; };
 
-    sharedModules = [
-      inputs.plasma-manager.homeModules.plasma-manager
-    ];
-
     users.sasaplus1.imports = [
-      ../home/modules/common.nix
-      ../home/modules/nixos.nix
+      ../../home/modules/common.nix
+      ../../home/modules/nixos.nix
     ];
   };
 }

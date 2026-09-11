@@ -1,7 +1,7 @@
 { inputs, lib, pkgs, ... }:
 
 let
-  allowUnfreePredicate = import ../lib/allow-unfree.nix lib;
+  allowUnfreePredicate = import ../../lib/allow-unfree.nix lib;
 in
 {
   nixpkgs.config = { inherit allowUnfreePredicate; };

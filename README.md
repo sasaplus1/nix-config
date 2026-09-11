@@ -51,7 +51,7 @@ every step below as root in the live environment, in this order.
 
 ### Password
 
-`modules/users.nix` sets `users.mutableUsers = false` and reads the hash for
+`modules/core/users.nix` sets `users.mutableUsers = false` and reads the hash for
 `sasaplus1` from `/etc/passwords/sasaplus1`. The file is not managed in this
 repository, so write it once per machine.
 

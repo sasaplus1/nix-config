@@ -7,10 +7,7 @@
     ./users.nix
     ./home-manager.nix
     ./openssh.nix
-    ./plasma.nix
-    ./japanese.nix
-    ./fonts.nix
-    ./packages-cui.nix
-    ./packages-gui.nix
+    ./locale.nix
+    ./packages.nix
   ];
 }

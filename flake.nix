@@ -25,35 +25,63 @@
     };
   };
 
-  outputs = inputs@{ self, nixpkgs, disko, ... }: {
-    nixosConfigurations.vm-aarch64 =
-      nixpkgs.lib.nixosSystem {
-        system = "aarch64-linux";
+  outputs =
+    inputs@{ self, nixpkgs, nixpkgs-unstable, home-manager, disko, ... }:
+    let
+      allowUnfreePredicate = import ./lib/allow-unfree.nix nixpkgs.lib;
 
-        specialArgs = { inherit inputs; };
+      # NOTE: builtins.currentSystem と getEnv を使うので --impure が必要
+      mkHome =
+        machine:
+        let
+          system = builtins.currentSystem;
+          config = { inherit allowUnfreePredicate; };
+          pkgs = import nixpkgs { inherit system config; };
+          pkgs-unstable = import nixpkgs-unstable { inherit system config; };
+        in
+        home-manager.lib.homeManagerConfiguration {
+          inherit pkgs;
 
-        modules = [
-          disko.nixosModules.disko
+          extraSpecialArgs = { inherit pkgs-unstable; };
 
-          ./hosts/vm-aarch64/configuration.nix
-        ];
+          modules = [ machine ];
+        };
+
+    in
+    {
+      nixosConfigurations.vm-aarch64 =
+        nixpkgs.lib.nixosSystem {
+          system = "aarch64-linux";
+
+          specialArgs = { inherit inputs; };
+
+          modules = [
+            disko.nixosModules.disko
+
+            ./hosts/vm-aarch64/configuration.nix
+          ];
+        };
+
+      nixosConfigurations.macbook-pro-2013-iso =
+        nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+
+          modules = [
+            ./iso/macbook-pro-2013.nix
+          ];
+        };
+
+      # flake.lock で固定した disko を使う
+      # nix run github:nix-community/disko/latest は可変ブランチなので使わない
+      packages.aarch64-linux.disko =
+        self.nixosConfigurations.vm-aarch64.config.system.build.destroyFormatMount;
+
+      packages.x86_64-linux.iso =
+        self.nixosConfigurations.macbook-pro-2013-iso.config.system.build.isoImage;
+
+      homeConfigurations = {
+        work = mkHome ./home/machines/work.nix;
+        macbook-air = mkHome ./home/machines/macbook-air.nix;
       };
-
-    nixosConfigurations.macbook-pro-2013-iso =
-      nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-
-        modules = [
-          ./iso/macbook-pro-2013.nix
-        ];
-      };
-
-    # flake.lock で固定した disko を使う
-    # nix run github:nix-community/disko/latest は可変ブランチなので使わない
-    packages.aarch64-linux.disko =
-      self.nixosConfigurations.vm-aarch64.config.system.build.destroyFormatMount;
-
-    packages.x86_64-linux.iso =
-      self.nixosConfigurations.macbook-pro-2013-iso.config.system.build.isoImage;
-  };
+    };
 }

@@ -26,22 +26,5 @@
         { layout = "jp"; }
       ];
     };
-
-    # UTM はトラックパッドを汎用USBデバイスとして見せる
-    # ID はどちらも 0627:0001 で名前だけが異なる
-    input.mice = [
-      {
-        name = "QEMU QEMU USB Tablet";
-        vendorId = "0627";
-        productId = "0001";
-        naturalScroll = true;
-      }
-      {
-        name = "QEMU QEMU USB Mouse";
-        vendorId = "0627";
-        productId = "0001";
-        naturalScroll = true;
-      }
-    ];
   };
 }

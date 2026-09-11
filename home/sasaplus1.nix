@@ -21,6 +21,9 @@
 
     workspace.lookAndFeel = "org.kde.breezedark.desktop";
 
+    # Plasma は LANG ではなく kdeglobals の LANGUAGE を見る
+    configFile.kdeglobals.Translations.LANGUAGE = "ja";
+
     # kxkbrc に Use=true が書かれると services.xserver.xkb より優先される
     input.keyboard = {
       model = "jp106";

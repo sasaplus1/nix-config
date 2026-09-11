@@ -19,6 +19,10 @@
       fcitx5-mozc
     ];
 
+    # SKIP_FCITX_USER_PATH=1 を立てて ~/.config/fcitx5 を読ませない
+    # GUI から設定を変えられなくなる代わりに設定が drift しない
+    fcitx5.ignoreUserConfig = true;
+
     # 既定のグループは Layout=us で作られる
     # us では keycode 92 と 94 にキーシムが割り当たらず下の Hotkey が死ぬ
     fcitx5.settings.inputMethod = {

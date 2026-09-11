@@ -73,7 +73,7 @@
 
       # flake.lock で固定した disko を使う
       # nix run github:nix-community/disko/latest は可変ブランチなので使わない
-      packages.aarch64-linux.disko =
+      packages.aarch64-linux.disko-vm-aarch64 =
         self.nixosConfigurations.vm-aarch64.config.system.build.destroyFormatMount;
 
       # hardware-configuration.nix を生成する前に走らせる必要があるため

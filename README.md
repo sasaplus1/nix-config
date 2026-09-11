@@ -18,11 +18,11 @@ every step below as root in the live environment, in this order.
 
    ```sh
    nix --experimental-features 'nix-command flakes' run \
-     'git+https://github.com/sasaplus1/nix-config#disko' -- --yes-wipe-all-disks
+     'git+https://github.com/sasaplus1/nix-config#disko-vm-aarch64' -- --yes-wipe-all-disks
    ```
 
-   The `disko` output is this repository's own package, built from the `disko`
-   revision pinned in `flake.lock`. Do not substitute
+   The `disko-vm-aarch64` output is this repository's own package, built from
+   the `disko` revision pinned in `flake.lock`. Do not substitute
    `github:nix-community/disko/latest`, which is a mutable branch, for a script
    that repartitions a disk as root.
 

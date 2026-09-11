@@ -15,7 +15,7 @@ defaults:
     shell: bash
 
 jobs:
-  flake_check:
+  flake-check:
     name: Flake check
     runs-on: ubuntu-24.04
     timeout-minutes: 20
@@ -25,16 +25,14 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: DeterminateSystems/determinate-nix-action@021c8a1bd3570eb21f5c20a054812b0c4d9ca614 # v3.22.3
       - run: nix flake check --no-build
-
-  # nix flake check は homeConfigurations を評価しないので個別に建てる
-  home_manager_build:
+  home-manager-build:
     name: Home Manager build (${{ matrix.os }})
     strategy:
       fail-fast: false
       matrix:
         os:
-          - macos-latest
-          - ubuntu-latest
+          - macos-26
+          - ubuntu-24.04
     runs-on: ${{ matrix.os }}
     timeout-minutes: 60
     permissions:
@@ -42,7 +40,7 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: DeterminateSystems/determinate-nix-action@021c8a1bd3570eb21f5c20a054812b0c4d9ca614 # v3.22.3
-      - run: |
-          nix build --impure --no-link \
-            '.#homeConfigurations.work.activationPackage' \
+      - run: >
+          nix build --impure --no-link
+            '.#homeConfigurations.work.activationPackage'
             '.#homeConfigurations.macbook-air.activationPackage'

@@ -1,14 +1,7 @@
 { inputs, lib, pkgs, ... }:
 
 let
-  allowUnfreePredicate =
-    pkg:
-    builtins.elem (lib.getName pkg) [
-      # Bitwarden License
-      "bws"
-      # Docker Subscription Service Agreement
-      "docker-sbx"
-    ];
+  allowUnfreePredicate = import ../lib/allow-unfree.nix lib;
 in
 {
   nixpkgs.config = { inherit allowUnfreePredicate; };

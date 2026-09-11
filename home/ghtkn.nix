@@ -1,50 +1,69 @@
-# ghtkn is not packaged in nixpkgs, so it is built here.
+# ghtkn is not packaged in nixpkgs, so the official release binary is
+# installed here.
 #
 # It is the first tool a fresh machine needs: it mints the GitHub App user
-# access token that everything else (nekomata, kareha, ranbiki) is fetched
-# with. Building it from the same declarative pipeline as every other package
-# removes the need to curl a binary before any token exists.
+# access token that everything else is fetched with. Pulling it from the same
+# declarative pipeline as every other package removes the need to curl a binary
+# before any token exists.
 {
   lib,
-  buildGoModule,
-  fetchFromGitHub,
+  stdenvNoCC,
+  fetchurl,
 }:
 
-buildGoModule (finalAttrs: {
-  pname = "ghtkn";
+let
   # renovate: datasource=github-releases depName=suzuki-shunsuke/ghtkn
   #
-  # NOTE: renovate bumps this version but cannot compute the two hashes below.
-  # After a bump they go stale and the build fails. Run nix-update, or build
-  # twice and copy the `got:` value out of each hash mismatch error.
+  # NOTE: renovate bumps this version but cannot update the hashes below.
+  # After a bump they go stale and the build fails. The upstream release ships
+  # ghtkn_checksums.txt with the sha256 of every asset, so convert the relevant
+  # lines with `nix hash to-sri --type sha256 <hex>`.
   version = "0.4.0";
 
-  src = fetchFromGitHub {
-    owner = "suzuki-shunsuke";
-    repo = "ghtkn";
-    tag = "v${finalAttrs.version}";
-    hash = "sha256-H1dyBbwq3jVftk/90f6iDrwiTTwvnGYOWALATrLsBHc=";
+  assets = {
+    x86_64-linux = {
+      suffix = "linux_amd64";
+      hash = "sha256-Lbzc0NQJZv2hNSKyPGUiuMZoLw5xkwExln4PXXDxJSY=";
+    };
+    aarch64-linux = {
+      suffix = "linux_arm64";
+      hash = "sha256-M6Dh+RU1/AqQDdwI4sGCsd69VlYSQVPECMLJapr8Qjg=";
+    };
   };
+in
 
-  vendorHash = "sha256-7mw8SPjs6HCQVx62yoKugSf1J/rqsG9uBfVCfsVWpnY=";
+stdenvNoCC.mkDerivation (finalAttrs: {
+  pname = "ghtkn";
+  inherit version;
 
-  subPackages = [ "cmd/ghtkn" ];
+  src =
+    let
+      asset =
+        assets.${stdenvNoCC.hostPlatform.system}
+          or (throw "ghtkn: unsupported system ${stdenvNoCC.hostPlatform.system}");
+    in
+    fetchurl {
+      url = "https://github.com/suzuki-shunsuke/ghtkn/releases/download/v${finalAttrs.version}/ghtkn_${asset.suffix}.tar.gz";
+      inherit (asset) hash;
+    };
 
-  # golang.design/x/clipboard is a direct dependency and would drag in X11 on
-  # Linux and Cocoa on Darwin, but upstream ships every release binary with
-  # CGO_ENABLED=0 (see .goreleaser.yml), so match that and keep this a pure Go
-  # build with no native dependencies.
-  env.CGO_ENABLED = 0;
+  # The archive has no top-level directory.
+  sourceRoot = ".";
 
-  ldflags = [
-    "-s"
-    "-w"
-  ];
+  # Upstream builds every release binary with CGO_ENABLED=0 (see
+  # .goreleaser.yml), so it is statically linked and needs no patching.
+  installPhase = ''
+    runHook preInstall
+    install -Dm755 ghtkn $out/bin/ghtkn
+    runHook postInstall
+  '';
 
   meta = {
     description = "CLI to create short-lived GitHub App user access tokens for secure local development";
     homepage = "https://github.com/suzuki-shunsuke/ghtkn";
     license = lib.licenses.mit;
     mainProgram = "ghtkn";
+    platforms = lib.attrNames assets;
+    sourceProvenance = [ lib.sourceTypes.binaryNativeCode ];
   };
 })

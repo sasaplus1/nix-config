@@ -1,6 +1,6 @@
-# nixos-config
+# nix-config
 
-my NixOS configurations
+my NixOS and Home Manager configurations
 
 ## Hosts
 
@@ -18,7 +18,7 @@ every step below as root in the live environment, in this order.
 
    ```sh
    nix --experimental-features 'nix-command flakes' run \
-     'git+https://github.com/sasaplus1/nixos-config#disko' -- --yes-wipe-all-disks
+     'git+https://github.com/sasaplus1/nix-config#disko' -- --yes-wipe-all-disks
    ```
 
    The `disko` output is this repository's own package, built from the `disko`
@@ -43,7 +43,7 @@ every step below as root in the live environment, in this order.
 
    ```sh
    nixos-install --no-root-password \
-     --flake 'git+https://github.com/sasaplus1/nixos-config#vm-aarch64'
+     --flake 'git+https://github.com/sasaplus1/nix-config#vm-aarch64'
    ```
 
    `--no-root-password` skips the interactive prompt because `root` is left
@@ -66,7 +66,7 @@ run the activation script.
 
 ```sh
 nix --experimental-features 'nix-command flakes' run \
-  'git+https://github.com/sasaplus1/nixos-config#nixosConfigurations.vm-aarch64.config.system.build.mount'
+  'git+https://github.com/sasaplus1/nix-config#nixosConfigurations.vm-aarch64.config.system.build.mount'
 
 mkdir -p /mnt/etc/passwords
 nix-shell -p mkpasswd --run mkpasswd > /mnt/etc/passwords/sasaplus1
@@ -83,7 +83,7 @@ prints `!` while the account is still locked.
 
 ```sh
 sudo nixos-rebuild switch \
-  --flake 'git+https://github.com/sasaplus1/nixos-config#vm-aarch64'
+  --flake 'git+https://github.com/sasaplus1/nix-config#vm-aarch64'
 ```
 
 The `git+https:` scheme is used instead of `github:` throughout this file.

@@ -21,6 +21,15 @@
 
     workspace.lookAndFeel = "org.kde.breezedark.desktop";
 
+    # kxkbrc に Use=true が書かれると services.xserver.xkb より優先される
+    input.keyboard = {
+      model = "jp106";
+
+      layouts = [
+        { layout = "jp"; }
+      ];
+    };
+
     # UTM はトラックパッドを汎用USBデバイスとして見せる
     # ID はどちらも 0627:0001 で名前だけが異なる
     input.mice = [

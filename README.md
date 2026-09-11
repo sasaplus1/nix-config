@@ -49,6 +49,54 @@ every step below as root in the live environment, in this order.
    `--no-root-password` skips the interactive prompt because `root` is left
    without a password on purpose.
 
+### macbook-pro-2013
+
+Boot the ISO built from `.#iso`, which carries the `broadcom_sta` driver the
+built-in Wi-Fi needs, and run every step below as root in the live environment.
+
+Unlike `vm-aarch64`, this host is not in `nixosConfigurations` until its
+`hardware-configuration.nix` exists, so the file has to be generated and
+committed in the middle of the installation.
+
+1. Confirm the disk. The stock Apple PCIe SSD is an AHCI device, so it shows up
+   as `/dev/sda`, but a machine whose blade was swapped for an NVMe drive shows
+   up as `/dev/nvme0n1`.
+
+   ```sh
+   lsblk -o NAME,SIZE,MODEL,TRAN
+   ```
+
+   Correct `hosts/macbook-pro-2013/disk-config.nix` if it does not say `sata`.
+
+2. Partition and mount. This destroys everything on the disk, macOS included.
+
+   ```sh
+   nix --experimental-features 'nix-command flakes' run \
+     'git+https://github.com/sasaplus1/nix-config#disko-macbook-pro-2013'
+   ```
+
+   The prompt asks for confirmation. Do not pass `--yes-wipe-all-disks` here.
+
+3. Generate the hardware configuration and add it to the repository. The
+   filesystems come from `disk-config.nix`, so they are left out.
+
+   ```sh
+   nixos-generate-config --no-filesystems --root /mnt
+   ```
+
+   Copy `/mnt/etc/nixos/hardware-configuration.nix` into
+   `hosts/macbook-pro-2013/`, commit it, and add the host to
+   `nixosConfigurations` in `flake.nix`.
+
+4. Write the password hash, as in step 2 of `vm-aarch64`.
+
+5. Install, then eject the ISO and reboot.
+
+   ```sh
+   nixos-install --no-root-password \
+     --flake 'git+https://github.com/sasaplus1/nix-config#macbook-pro-2013'
+   ```
+
 ### Password
 
 `modules/core/users.nix` sets `users.mutableUsers = false` and reads the hash for

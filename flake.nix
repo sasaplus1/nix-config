@@ -76,6 +76,19 @@
       packages.aarch64-linux.disko =
         self.nixosConfigurations.vm-aarch64.config.system.build.destroyFormatMount;
 
+      # hardware-configuration.nix を生成する前に走らせる必要があるため
+      # ホストの構成ではなくディスク定義だけから組み立てる
+      packages.x86_64-linux.disko-macbook-pro-2013 =
+        (nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+
+          modules = [
+            disko.nixosModules.disko
+
+            ./hosts/macbook-pro-2013/disk-config.nix
+          ];
+        }).config.system.build.destroyFormatMount;
+
       packages.x86_64-linux.iso =
         self.nixosConfigurations.macbook-pro-2013-iso.config.system.build.isoImage;
 

@@ -1,10 +1,6 @@
 { ... }:
 
 {
-  imports = [
-    ./packages.nix
-  ];
-
   home.stateVersion = "26.05";
 
   # ja_JP.UTF-8 だと日本語名のディレクトリが作られる

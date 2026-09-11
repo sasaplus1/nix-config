@@ -19,6 +19,9 @@
       inputs.plasma-manager.homeModules.plasma-manager
     ];
 
-    users.sasaplus1 = import ../home/sasaplus1.nix;
+    users.sasaplus1.imports = [
+      ../home/modules/common.nix
+      ../home/modules/nixos.nix
+    ];
   };
 }

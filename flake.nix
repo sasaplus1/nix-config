@@ -22,12 +22,12 @@
         ];
       };
 
-    nixosConfigurations.macbook-pro-11-1-iso =
+    nixosConfigurations.macbook-pro-2013-iso =
       nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
 
         modules = [
-          ./iso/macbook-pro-11-1.nix
+          ./iso/macbook-pro-2013.nix
         ];
       };
 
@@ -37,6 +37,6 @@
       self.nixosConfigurations.vm-aarch64.config.system.build.destroyFormatMount;
 
     packages.x86_64-linux.iso =
-      self.nixosConfigurations.macbook-pro-11-1-iso.config.system.build.isoImage;
+      self.nixosConfigurations.macbook-pro-2013-iso.config.system.build.isoImage;
   };
 }

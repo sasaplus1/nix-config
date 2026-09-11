@@ -1,3 +1,4 @@
+# MacBookPro11,1 (MacBook Pro Retina 13-inch, Late 2013)
 { config, lib, modulesPath, ... }:
 
 {

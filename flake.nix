@@ -62,6 +62,19 @@
           ];
         };
 
+      nixosConfigurations.macbook-pro-2013 =
+        nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+
+          specialArgs = { inherit inputs; };
+
+          modules = [
+            disko.nixosModules.disko
+
+            ./hosts/macbook-pro-2013/configuration.nix
+          ];
+        };
+
       nixosConfigurations.macbook-pro-2013-iso =
         nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";

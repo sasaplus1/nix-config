@@ -41,14 +41,22 @@
     # かなキーでオン、英数キーでオフにする
     # UTM は かな を keycode 92、英数 を 94 で渡してくるので
     # jp レイアウトではそれぞれ Henkan と Muhenkan になる
+    # Apple の内蔵キーボードは HID の LANG1/LANG2 をそのまま出すため
+    # hid-apple 経由では Hangul と Hangul_Hanja になる
     fcitx5.settings.globalOptions = {
       # 既定値には Zenkaku_Hankaku と Hangul が含まれる
       # トグルは Control+space だけにする
       "Hotkey/TriggerKeys"."0" = "Control+space";
 
-      "Hotkey/ActivateKeys"."0" = "Henkan_Mode";
+      "Hotkey/ActivateKeys" = {
+        "0" = "Henkan_Mode";
+        "1" = "Hangul";
+      };
 
-      "Hotkey/DeactivateKeys"."0" = "Muhenkan";
+      "Hotkey/DeactivateKeys" = {
+        "0" = "Muhenkan";
+        "1" = "Hangul_Hanja";
+      };
     };
   };
 }

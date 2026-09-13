@@ -32,12 +32,13 @@
   services.xserver.xkb.model = "apple";
 
   # 内蔵トラックパッドはキーボードとは別のデバイスとして出てくる
+  # libinput はこのデバイスに限り naturalScroll を既定で有効にする
   home-manager.users.sasaplus1.programs.plasma.input.touchpads = [
     {
       name = "bcm5974";
       vendorId = "05ac";
       productId = "025b";
-      naturalScroll = true;
+      naturalScroll = false;
     }
   ];
 

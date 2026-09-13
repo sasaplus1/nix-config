@@ -3,7 +3,7 @@ builtins.elem (lib.getName pkg) [
   # Broadcom Proprietary License
   "broadcom-sta"
   # Bitwarden License
-  "bws"
+  # "bws"
   # Docker Subscription Service Agreement
   "docker-sbx"
 ]

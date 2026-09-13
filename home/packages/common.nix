@@ -8,7 +8,7 @@
   pkgs.bash-preexec
   pkgs.bat
   pkgs.bitwarden-cli
-  pkgs.bws
+  # pkgs.bws
   pkgs-unstable.codex
   pkgs.curl
   pkgs.delta

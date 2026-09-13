@@ -5,7 +5,7 @@ my NixOS and Home Manager configurations
 ## Hosts
 
 - `vm-aarch64` - a VM on [UTM](https://mac.getutm.app/)
-- `macbook-pro-2013` - work in progress
+- `macbook-pro-2013` - a MacBookPro11,1
 
 ## Setup
 
@@ -31,35 +31,33 @@ Do not carry `--yes-wipe-all-disks` over to a host that has data worth keeping.
 ### macbook-pro-2013
 
 Boot the ISO built from `.#iso`, which carries the `broadcom_sta` driver the
-built-in Wi-Fi needs, and run these as root.
+built-in Wi-Fi needs, and run these as root. This destroys every partition on
+the disk, macOS included.
 
-1. Confirm the disk. The stock Apple PCIe SSD is AHCI, so it comes up as
-   `/dev/sda`, but a blade swapped for NVMe comes up as `/dev/nvme0n1`. Correct
-   `hosts/macbook-pro-2013/disk-config.nix` if it differs.
+```sh
+lsblk -o NAME,SIZE,MODEL,TRAN
 
-   ```sh
-   lsblk -o NAME,SIZE,MODEL,TRAN
-   ```
+nix --experimental-features 'nix-command flakes' run \
+  'git+https://github.com/sasaplus1/nix-config#disko-macbook-pro-2013' -- --yes-wipe-all-disks
 
-2. Partition and mount. This destroys everything on the disk, macOS included.
+mkdir -p /mnt/etc/passwords
+nix-shell -p mkpasswd --run mkpasswd > /mnt/etc/passwords/sasaplus1
+chmod 600 /mnt/etc/passwords/sasaplus1
 
-   ```sh
-   nix --experimental-features 'nix-command flakes' run \
-     'git+https://github.com/sasaplus1/nix-config#disko-macbook-pro-2013'
-   ```
+nixos-install --option tarball-ttl 0 --no-root-password \
+  --flake 'git+https://github.com/sasaplus1/nix-config#macbook-pro-2013'
+```
 
-3. Generate the hardware configuration. The filesystems come from
-   `disk-config.nix`, so they are left out.
+The stock Apple PCIe SSD is AHCI, so it comes up as `/dev/sda`, but a blade
+swapped for NVMe comes up as `/dev/nvme0n1`. Correct `disk-config.nix` if
+`lsblk` disagrees.
 
-   ```sh
-   nixos-generate-config --no-filesystems --root /mnt
-   ```
+`broadcom_sta` does not speak SAE, so the access point has to offer WPA2. It
+will not associate with a WPA3-only network.
 
-   Copy `/mnt/etc/nixos/hardware-configuration.nix` into
-   `hosts/macbook-pro-2013/`, commit it, and add the host to
-   `nixosConfigurations` in `flake.nix`.
-
-4. Write the password hash and install, as in `vm-aarch64`.
+`hardware-configuration.nix` is already committed. Regenerate it with
+`nixos-generate-config --no-filesystems --root /mnt` only if the hardware
+changes.
 
 ### Password
 
@@ -90,6 +88,9 @@ sudo nixos-rebuild switch \
 
 `github:` resolves branch names through `api.github.com`, which is rate limited
 per source address, so `git+https:` is used throughout.
+
+A branch name resolves to whatever revision was cached within the last hour.
+Pass `--option tarball-ttl 0` to pick up a commit pushed just before.
 
 ## License
 

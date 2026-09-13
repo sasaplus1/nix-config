@@ -31,6 +31,16 @@
   # 内蔵キーボードは Apple の JIS 配列
   services.xserver.xkb.model = "apple";
 
+  # 内蔵トラックパッドはキーボードとは別のデバイスとして出てくる
+  home-manager.users.sasaplus1.programs.plasma.input.touchpads = [
+    {
+      name = "bcm5974";
+      vendorId = "05ac";
+      productId = "025b";
+      naturalScroll = true;
+    }
+  ];
+
   networking.hostName = "macbook-pro-2013";
 
   system.stateVersion = "26.05";
